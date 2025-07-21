@@ -39,12 +39,7 @@ def handle_dhcp(pkt):
         udp = UDP(sport=67, dport=68)
         bootp = BOOTP(op=2, yiaddr=offered_ip, siaddr=server_ip,
                       chaddr=pkt[BOOTP].chaddr, xid=pkt[BOOTP].xid, flags=0x8000)
-        dhcp = DHCP(options=[("message-type", "offer"),
-                             ("server_id", server_ip),
-                             ("lease_time", 600),
-                             ("subnet_mask", subnet_mask),
-                             ("router", router_ip),
-                             "end"])
+        dhcp = DHCP(options=[("message-type", "offer"),("server_id", server_ip),("lease_time", 600),("subnet_mask", subnet_mask),("router", router_ip),"end"])
         sendp(ether/ip/udp/bootp/dhcp, iface=interface, verbose=0)
 
     elif DHCP in pkt and pkt[DHCP].options[0][1] == 3:  # DHCP Request
@@ -60,12 +55,7 @@ def handle_dhcp(pkt):
         udp = UDP(sport=67, dport=68)
         bootp = BOOTP(op=2, yiaddr=requested_ip, siaddr=server_ip,
                       chaddr=pkt[BOOTP].chaddr, xid=pkt[BOOTP].xid, flags=0x8000)
-        dhcp = DHCP(options=[("message-type", "ack"),
-                             ("server_id", server_ip),
-                             ("lease_time", 600),
-                             ("subnet_mask", subnet_mask),
-                             ("router", router_ip),
-                             "end"])
+        dhcp = DHCP(options=[("message-type", "ack"),("server_id", server_ip),("lease_time", 600),("subnet_mask", subnet_mask),("router", router_ip),"end"])
         sendp(ether/ip/udp/bootp/dhcp, iface=interface, verbose=0)
 
 print(f"[*] Starting DHCP server on {interface} using 10.0.0.0/24 pool")
