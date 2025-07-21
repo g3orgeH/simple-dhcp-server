@@ -5,7 +5,7 @@ from scapy.layers.l2 import Ether
 
 # === CONFIGURATION ===
 interface = "wlan0"  # Update with your actual AP interface (e.g., 'ap0')
-server_ip = "10.0.0.2"
+server_ip = "10.0.0.1"
 subnet_mask = "255.255.255.0"
 router_ip = server_ip
 
@@ -64,3 +64,9 @@ def handle_dhcp(pkt):
                              ("server_id", server_ip),
                              ("lease_time", 600),
                              ("subnet_mask", subnet_mask),
+                             ("router", router_ip),
+                             "end"])
+        sendp(ether/ip/udp/bootp/dhcp, iface=interface, verbose=0)
+
+print(f"[*] Starting DHCP server on {interface} using 10.0.0.0/24 pool")
+sniff(filter="udp and (port 67 or 68)", iface=interface, prn=handle_dhcp, store=0)
